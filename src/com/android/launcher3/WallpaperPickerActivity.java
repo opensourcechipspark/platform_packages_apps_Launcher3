@@ -97,6 +97,8 @@ public class WallpaperPickerActivity extends WallpaperCropActivity {
     ArrayList<Uri> mTempWallpaperTiles = new ArrayList<Uri>();
     private SavedWallpaperImages mSavedImages;
     private WallpaperInfo mLiveWallpaperInfoOnPickerLaunch;
+    
+    private boolean isSetWallpaper = false;
 
     public static abstract class WallpaperTileInfo {
         protected View mView;
@@ -206,6 +208,7 @@ public class WallpaperPickerActivity extends WallpaperCropActivity {
 
     // called by onCreate; this is subclassed to overwrite WallpaperCropActivity
     protected void init() {
+    	isSetWallpaper = false;
         setContentView(R.layout.wallpaper_picker);
 
         mCropView = (CropView) findViewById(R.id.cropView);
@@ -376,9 +379,13 @@ public class WallpaperPickerActivity extends WallpaperCropActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                    	if(isSetWallpaper){
+                    		return;
+                    	}
                         if (mSelectedThumb != null) {
                             WallpaperTileInfo info = (WallpaperTileInfo) mSelectedThumb.getTag();
                             info.onSave(WallpaperPickerActivity.this);
+                            isSetWallpaper = true;
                         }
                     }
                 });

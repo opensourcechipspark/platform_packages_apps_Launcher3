@@ -25,6 +25,7 @@ import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -76,6 +77,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     private static final int MIN_LENGTH_FOR_FLING = 25;
 
     protected static final int PAGE_SNAP_ANIMATION_DURATION = 750;
+    protected final int MAX_PAGE_SNAP_DURATION = getResources().getInteger(R.integer.config_maxPageSnapDuration);
     protected static final int SLOW_PAGE_SNAP_ANIMATION_DURATION = 950;
     protected static final float NANOTIME_DIV = 1000000000.0f;
 
@@ -2149,6 +2151,8 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         // user flings, so we scale the duration by a value near to the derivative of the scroll
         // interpolator at zero, ie. 5. We use 4 to make it a little slower.
         duration = 4 * Math.round(1000 * Math.abs(distance / velocity));
+        if(MAX_PAGE_SNAP_DURATION !=0)
+        duration = Math.min(duration, MAX_PAGE_SNAP_DURATION);
 
         snapToPage(whichPage, delta, duration);
     }

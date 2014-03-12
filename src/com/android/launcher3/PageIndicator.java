@@ -187,7 +187,10 @@ public class PageIndicator extends LinearLayout {
     }
 
     void updateMarker(int index, PageMarkerResources marker) {
-        PageIndicatorMarker m = mMarkers.get(index);
+        //huangjc:IndexOutOfBoundsException bug for index>size, 
+	    index = Math.max(0, Math.min(mMarkers.size() - 1, index));
+		//end
+		PageIndicatorMarker m = mMarkers.get(index);
         m.setMarkerDrawables(marker.activeId, marker.inactiveId);
     }
 

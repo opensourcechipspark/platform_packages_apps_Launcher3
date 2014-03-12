@@ -241,6 +241,7 @@ public class Launcher extends Activity
     private AppsCustomizeTabHost mAppsCustomizeTabHost;
     private AppsCustomizePagedView mAppsCustomizeContent;
     private boolean mAutoAdvanceRunning = false;
+	private boolean StateNormal = false;
     private View mQsbBar;
 
     private Bundle mSavedState;
@@ -837,7 +838,7 @@ public class Launcher extends Activity
         if (mOnResumeState == State.WORKSPACE) {
             showWorkspace(false);
         } else if (mOnResumeState == State.APPS_CUSTOMIZE) {
-            showAllApps(false, AppsCustomizePagedView.ContentType.Applications, false);
+            showAllApps(false, mAppsCustomizeContent.getContentType(), false);
         }
         mOnResumeState = State.NONE;
 
@@ -978,6 +979,10 @@ public class Launcher extends Activity
     }
 
     protected void startSettings() {
+	Intent intent = new Intent();
+	ComponentName comp = new ComponentName("com.android.settings", "com.android.settings.Settings");
+	intent.setComponent(comp);
+	startActivity(intent);
     }
 
     public interface QSBScroller {
@@ -1117,13 +1122,16 @@ public class Launcher extends Activity
         // Restore the AppsCustomize tab
         if (mAppsCustomizeTabHost != null) {
             String curTab = savedState.getString("apps_customize_currentTab");
+			String newCurTab = mSharedPrefs.getString("apps_customize_currentTab", "APPS");
+			if(null != newCurTab && !curTab.equals(newCurTab)){
+			    curTab = newCurTab;
+	         }
             if (curTab != null) {
                 mAppsCustomizeTabHost.setContentTypeImmediate(
                         mAppsCustomizeTabHost.getContentTypeForTabTag(curTab));
                 mAppsCustomizeContent.loadAssociatedPages(
                         mAppsCustomizeContent.getCurrentPage());
             }
-
             int currentIndex = savedState.getInt("apps_customize_currentIndex");
             mAppsCustomizeContent.restorePageForIndex(currentIndex);
         }
@@ -2845,6 +2853,13 @@ public class Launcher extends Activity
                 }
                 @Override
                 public void onAnimationEnd(Animator animation) {
+					//add by huangjc@rock-chips.com
+					// If we don't set the final scale values here, if this animation is cancelled  
+				    // it will have the wrong scale value and subsequent cameraPan animations will  
+					// not fix that
+					toView.setScaleX(1.0f);
+					toView.setScaleY(1.0f);
+					//add end
                     dispatchOnLauncherTransitionEnd(fromView, animated, false);
                     dispatchOnLauncherTransitionEnd(toView, animated, false);
 
@@ -2946,10 +2961,12 @@ public class Launcher extends Activity
             int stagger = res.getInteger(R.integer.config_appsCustomizeWorkspaceAnimationStagger);
             workspaceAnim = mWorkspace.getChangeStateAnimation(
                     toState, animated, stagger, -1);
+			StateNormal = true;
         } else if (toState == Workspace.State.SPRING_LOADED ||
                 toState == Workspace.State.OVERVIEW) {
             workspaceAnim = mWorkspace.getChangeStateAnimation(
                     toState, animated);
+			StateNormal = false;
         }
 
         setPivotsForZoom(fromView, scaleFactor);
@@ -2985,6 +3002,12 @@ public class Launcher extends Activity
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     fromView.setVisibility(View.GONE);
+					//add by huangjc@rock-chips.com
+					if(StateNormal){
+					toView.setScaleX(1.0f);
+					toView.setScaleY(1.0f);
+					}
+					//add end
                     dispatchOnLauncherTransitionEnd(fromView, animated, true);
                     dispatchOnLauncherTransitionEnd(toView, animated, true);
                     if (onCompleteRunnable != null) {
@@ -3082,6 +3105,9 @@ public class Launcher extends Activity
             mAppsCustomizeTabHost.reset();
         }
         showAppsCustomizeHelper(animated, false, contentType);
+		SharedPreferences.Editor editor = mSharedPrefs.edit();
+	    editor.putString("apps_customize_currentTab",mAppsCustomizeTabHost.getTabTagForContentType(contentType));
+	    editor.commit();
         mAppsCustomizeTabHost.requestFocus();
 
         // Change the state *after* we've called all the transition code

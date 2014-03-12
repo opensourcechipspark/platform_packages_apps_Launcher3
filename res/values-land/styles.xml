@@ -22,6 +22,7 @@
     <style name="QSBBar">
     </style>
     <style name="SearchDropTargetBar">
+	<item name="android:orientation">vertical</item>
     </style>
     <style name="SearchButton">
     </style>

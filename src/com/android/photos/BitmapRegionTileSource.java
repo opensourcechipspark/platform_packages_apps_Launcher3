@@ -53,7 +53,7 @@ public class BitmapRegionTileSource implements TiledImageRenderer.TileSource {
     private static final int GL_SIZE_LIMIT = 2048;
     // This must be no larger than half the size of the GL_SIZE_LIMIT
     // due to decodePreview being allowed to be up to 2x the size of the target
-    private static final int MAX_PREVIEW_SIZE = 1024;
+    private static final int MAX_PREVIEW_SIZE = 900;
 
     BitmapRegionDecoder mDecoder;
     int mWidth;
@@ -242,7 +242,6 @@ public class BitmapRegionTileSource implements TiledImageRenderer.TileSource {
         // We need to resize down if the decoder does not support inSampleSize
         // or didn't support the specified inSampleSize (some decoders only do powers of 2)
         scale = (float) targetSize / (float) (Math.max(result.getWidth(), result.getHeight()));
-
         if (scale <= 0.5) {
             result = BitmapUtils.resizeBitmapByScale(result, scale, true);
         }

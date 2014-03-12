@@ -522,17 +522,24 @@ public class DynamicGrid {
                 359, 518,  4, 4,  60, 13, (hasAA ? 5 : 4), 56));
         // The tablet profile is odd in that the landscape orientation
         // also includes the nav bar on the side
-        deviceProfiles.add(new DeviceProfile("Nexus 7",
+        deviceProfiles.add(new DeviceProfile("WVGA",
+                407, 727,  4, 5,  68, 13, (hasAA ? 5 : 4), 56));
+        deviceProfiles.add(new DeviceProfile("1024x600",
+		        527, 951,  5, 6,  72, 14.4f,  7, 60));
+		deviceProfiles.add(new DeviceProfile("Nexus 7",
                 575, 904,  6, 6,  72, 14.4f,  7, 60));
         // Larger tablet profiles always have system bars on the top & bottom
         deviceProfiles.add(new DeviceProfile("Nexus 10",
                 727, 1207,  5, 8,  80, 14.4f,  9, 64));
-        /*
-        deviceProfiles.add(new DeviceProfile("Nexus 7",
+		deviceProfiles.add(new DeviceProfile("rk-sdk",
+		        600, 1000,  5, 5,  72, 14.4f,  5, 60));
+        deviceProfiles.add(new DeviceProfile("andows",
+				647, 1280,  5, 8,  56, 14.4f,  9, 60));
+		deviceProfiles.add(new DeviceProfile("Nexus 7",
                 600, 960,  5, 5,  72, 14.4f,  5, 60));
         deviceProfiles.add(new DeviceProfile("Nexus 10",
                 800, 1280,  5, 5,  80, 14.4f, (hasAA ? 7 : 6), 64));
-         */
+         
         deviceProfiles.add(new DeviceProfile("20-inch Tablet",
                 1527, 2527,  7, 7,  100, 20,  7, 72));
         mMinWidth = dpiFromPx(minWidthPx, dm);

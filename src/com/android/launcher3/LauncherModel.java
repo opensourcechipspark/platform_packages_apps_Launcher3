@@ -146,7 +146,8 @@ public class LauncherModel extends BroadcastReceiver {
     private Bitmap mDefaultIcon;
 
     protected int mPreviousConfigMcc;
-
+	private boolean IS_ANDOWS_TYPE =false;
+	private String ANDOWS_TYPE ="Andows";
     public interface Callbacks {
         public boolean setLoadOnResume();
         public int getCurrentWorkspaceScreen();
@@ -1601,6 +1602,7 @@ public class LauncherModel extends BroadcastReceiver {
         private boolean loadWorkspace() {
             final long t = DEBUG_LOADERS ? SystemClock.uptimeMillis() : 0;
 
+			IS_ANDOWS_TYPE=ANDOWS_TYPE.equals(RkSystemProp.get("ro.product.model"));
             final Context context = mContext;
             final ContentResolver contentResolver = context.getContentResolver();
             final PackageManager manager = context.getPackageManager();
@@ -1747,7 +1749,9 @@ public class LauncherModel extends BroadcastReceiver {
                                     deleteOnItemOverlap.set(false);
                                     if (!checkItemPlacement(occupied, info, deleteOnItemOverlap)) {
                                         if (deleteOnItemOverlap.get()) {
-                                            itemsToRemove.add(id);
+											if(!IS_ANDOWS_TYPE){
+                                            	itemsToRemove.add(id);
+											}
                                         }
                                         break;
                                     }
