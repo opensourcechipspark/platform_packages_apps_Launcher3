@@ -15,13 +15,11 @@
 -->
 
 <resources>
-<!-- AppsCustomize -->
-    <dimen name="apps_customize_pageLayoutWidthGap">36dp</dimen>
-    <dimen name="apps_customize_pageLayoutHeightGap">8dp</dimen>
-    <dimen name="apps_customize_pageLayoutPaddingTop">20dp</dimen>
-    <dimen name="apps_customize_pageLayoutPaddingBottom">14dp</dimen>
-
 <!-- QSB -->
     <dimen name="toolbar_button_vertical_padding">12dip</dimen>
     <dimen name="toolbar_button_horizontal_padding">20dip</dimen>
+
+<!-- Workspace -->
+    <dimen name="overview_panel_bottom_padding">40dp</dimen>
+    <dimen name="overview_mode_page_offset">110dp</dimen>
 </resources>

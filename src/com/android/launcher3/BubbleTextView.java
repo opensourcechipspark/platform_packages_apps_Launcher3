@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.Region.Op;
@@ -29,6 +28,8 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.widget.TextView;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 
 /**
  * TextView that draws a bubble behind the text. We cannot use a LineBackgroundSpan
@@ -87,7 +88,7 @@ public class BubbleTextView extends TextView {
         // Ensure we are using the right text size
         LauncherAppState app = LauncherAppState.getInstance();
         DeviceProfile grid = app.getDynamicGrid().getDeviceProfile();
-        setTextSize(TypedValue.COMPLEX_UNIT_SP, grid.iconTextSize);
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, grid.iconTextSizePx);
         setTextColor(getResources().getColor(R.color.workspace_icon_text_color));
     }
 
@@ -111,7 +112,7 @@ public class BubbleTextView extends TextView {
 
         setCompoundDrawables(null,
                 Utilities.createIconDrawable(b), null, null);
-        setCompoundDrawablePadding((int) ((grid.folderIconSizePx - grid.iconSizePx) / 2f));
+        setCompoundDrawablePadding(grid.iconDrawablePaddingPx);
         setText(info.title);
         setTag(info);
     }
@@ -203,6 +204,10 @@ public class BubbleTextView extends TextView {
         destCanvas.restore();
     }
 
+    public void setGlowColor(int color) {
+        mFocusedOutlineColor = mFocusedGlowColor = mPressedOutlineColor = mPressedGlowColor = color;
+    }
+
     /**
      * Returns a new bitmap to be used as the object outline, e.g. to visualize the drop location.
      * Responsibility for the bitmap is transferred to the caller.
@@ -245,6 +250,11 @@ public class BubbleTextView extends TextView {
                 }
 
                 mLongPressHelper.postCheckForLongPress();
+
+                Animation an = new ScaleAnimation(0.75f, 1.0f, 0.75f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                an.setDuration(150);
+                this.startAnimation(an);
+
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
